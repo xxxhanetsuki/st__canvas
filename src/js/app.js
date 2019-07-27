@@ -1,10 +1,12 @@
 import {createShape} from './shape'
 
-const movable = 1010;
+let movable = 1010;
 
 let width;
 let height;
 const ele = document.getElementById('canvas');
+// ele.setAttribute('width', 1010);
+// ele.setAttribute('height', height);
 const ctx = ele.getContext('2d');
 
 window.addEventListener('resize', function() {
@@ -19,20 +21,36 @@ function sizing() {
   height = document.getElementById('wrap').clientHeight;
   ele.height = height;
 
-  createShape(ctx, 145, 0, 13, 'red', 'bm', movable, true);
-  createShape(ctx, 105, 30, 0, 'blue', 'bm', movable);
-  createShape(ctx, 100, 55, 55, 'red', 'tp', movable);
-  createShape(ctx, 140, 150, 125, 'blue', 'bm', movable);
-  createShape(ctx, 155, 240, 0, 'red', 'bm', movable);
-  createShape(ctx, 60, 770, 0, 'red', 'bm', movable);
-  createShape(ctx, 100, 950, 50, 'blue', 'bm', movable);
+function create() {
+  const interval = setInterval(() => {
+    ctx.clearRect(0, 0, width, height); // 初期化
+    
+    // top
+    createShape(ctx, 145, formula(0, movable), 13, 'red', 'bm');
+    createShape(ctx, 105, formula(30, movable), 0, 'blue', 'bm');
+    createShape(ctx, 100, formula(55, movable), 55, 'red', 'tp');
+    createShape(ctx, 140, formula(150, movable), 125, 'blue', 'bm');
+    createShape(ctx, 155, formula(240, movable), 0, 'red', 'bm');
+    createShape(ctx, 60, formula(770, movable), 0, 'red', 'bm');
+    createShape(ctx, 100, formula(950, movable), 50, 'blue', 'bm');
 
-  // under
-  createShape(ctx, 160, 10, (height-160), 'blue', 'tp', movable);
-  createShape(ctx, 130, 80, (height-130-55), 'red', 'tp', movable);
-  createShape(ctx, 190, 130, (height-80), 'red', 'tp', movable);
-  createShape(ctx, 190, 260, (height-190-35), 'blue', 'bm', movable);
-  createShape(ctx, 60, 700, (height-60-10), 'red', 'tp', movable);
+    // under
+    createShape(ctx, 160, formula(10, movable), (height-160), 'blue', 'tp');
+    createShape(ctx, 130, formula(80, movable), (height-130-55), 'red', 'tp');
+    createShape(ctx, 190, formula(130, movable), (height-80), 'red', 'tp');
+    createShape(ctx, 190, formula(260, movable), (height-190-35), 'blue', 'bm');
+    createShape(ctx, 60, formula(700, movable), (height-60-10), 'red', 'tp');
+
+    movable = movable - 1
+
+    if (movable <= 0) {
+      clearInterval(interval)
+    }
+  }, 2)
+}
+
+function formula(initial, movable) {
+  return initial + ( 0.001 * Math.pow(movable, 2))
 }
 
 export const clearRect = () => {
